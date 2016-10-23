@@ -8,7 +8,7 @@ var io = require("socket.io")(server);
 
 server.listen(8080)
 
-app.use(require("express").static(path.join(__dirname)));
+app.use(require("express").static(__dirname));
 
 app.get("/",function(req,res){
     res.sendFile(path.join(__dirname,"client.html"))
