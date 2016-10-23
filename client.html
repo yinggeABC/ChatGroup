@@ -5,6 +5,7 @@
     <title>莺歌的聊天室</title>
     <link rel="stylesheet" href="./public/bootstrap.css"/>
     <link rel="stylesheet" href="./index.css"/>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 <div class="container">
@@ -12,7 +13,6 @@
     <div class="panel-heading text-center h3">聊天室</div>
     <div class="panel-body">
      <ul class="list-group">
-         <li class="list-group-item">欢迎来到聊天室</li>
      </ul>
     </div>
     <div class="panel-footer clearfix">
@@ -21,13 +21,40 @@
         <input type="text" class="form-control"/>
         </div>
         <div class="col-sm-1">
-            <button class="btn btn-primary" type="button">发送</button>
+            <button class="btn btn-primary" type="button" onclick="send()">发送</button>
         </div>
     </div>
     </div>
 </div>
 </div>
-<script src="./public/jquery.js"></script>
-<script src="./public/bootstrap.min.js"></script>
+<script src="/public/jquery.js"></script>
+<script src="/public/bootstrap.min.js"></script>
+<script>
+    window.onload = function(){
+        var oList = $(".list-group")
+var socket = io.connect("http://localhost:8080")
+
+    socket.on("connect",function(){
+        append({user:"系统",content:"请输入昵称"})
+    });
+
+      socket.on("message",function(msg){
+          append(msg)
+      })
+
+
+        function append(msg){
+            oList.append("<li class='list-group-item'><span class='text-primary'>"+msg.user+":</span>"+msg.content+"</li>")
+        }
+
+        window.send = function(){
+            var oInput = $("[type='text']")
+            var curMsg = oInput.val();
+            socket.emit("message",curMsg);
+            oInput.val("");
+
+        }
+    }
+</script>
 </body>
 </html>
