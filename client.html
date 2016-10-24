@@ -18,7 +18,7 @@
     <div class="panel-footer clearfix">
     <div class="">
         <div class="col-sm-11">
-        <input type="text" class="form-control"/>
+        <input type="text" class="form-control" onkeypress="keySend()"/>
         </div>
         <div class="col-sm-1">
             <button class="btn btn-primary" type="button" onclick="send()">发送</button>
@@ -47,12 +47,17 @@ var socket = io.connect("http://localhost:8080")
             oList.append("<li class='list-group-item'><span class='text-primary'>"+msg.user+":</span>"+msg.content+"</li>")
         }
 
+        window.keySend = function(){
+            if (event.keyCode ==13){//回车键
+                send()
+            }
+        }
+
         window.send = function(){
             var oInput = $("[type='text']")
             var curMsg = oInput.val();
             socket.emit("message",curMsg);
             oInput.val("");
-
         }
     }
 </script>
