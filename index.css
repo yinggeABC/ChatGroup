@@ -10,3 +10,6 @@ body{
 .list-group-item .text-primary{
     cursor:pointer;
 }
+.msgList{
+    margin-top:50px;
+}

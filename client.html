@@ -3,20 +3,27 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>莺歌的聊天室</title>
-    <link rel="stylesheet" href="./public/bootstrap.css"/>
+    <link rel="stylesheet" href="/public/bootstrap.css"/>
     <link rel="stylesheet" href="./index.css"/>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 <div class="container">
+
 <div class="panel-primary">
-    <div class="panel-heading text-center h3">聊天室</div>
+    <div class="panel-heading text-center h3">
+        聊天室
+    </div>
+    <div class="col-sm-9">
     <div class="panel-body">
-     <ul class="list-group">
+        <button type="button" class="btn btn-success" onclick="join('room1')">进入聊天室一</button>
+        <button type="button" class="btn btn-success " onclick="leave('room1')">退出聊天室一</button>
+        <button type="button" class="btn btn-warning" onclick="join('room2')">进入聊天室二</button>
+        <button type="button" class="btn btn-warning " onclick="leave('room2')">退出聊天室二</button>
+     <ul class="list-group msgList">
      </ul>
     </div>
     <div class="panel-footer clearfix">
-    <div class="">
         <div class="col-sm-11">
         <input type="text" class="form-control" onkeypress="keySend()"/>
         </div>
@@ -24,14 +31,19 @@
             <button class="btn btn-primary" type="button" onclick="send()">发送</button>
         </div>
     </div>
-    </div>
 </div>
+    <div class="col-sm-3">
+        <ul class="list-group userList">
+<li class="list-group-item disabled">成员列表</li>
+        </ul>
+    </div>
+    </div>
 </div>
 <script src="/public/jquery.js"></script>
 <script src="/public/bootstrap.min.js"></script>
 <script>
     window.onload = function(){
-        var oList = $(".list-group")
+        var oList = $(".msgList")
         var oInput = $("[type='text']")
 var socket = io.connect("http://localhost:8080")
 
@@ -42,6 +54,21 @@ var socket = io.connect("http://localhost:8080")
       socket.on("message",function(msg){
           append(msg)
       })
+
+        socket.on("status",function(status){
+            var userList = $(".userList")
+            var colors= {"room1":"#5cb85c","room2":"#f0ad4e","outer":"#337ab7"}
+            userList.children("li:gt(0)").remove()
+            for (var user in status){
+                if (status.hasOwnProperty(user)){
+                    var userState = status[user];
+                    var color = colors[userState];
+                    userList.append("<li class='list-group-item'><span class='glyphicon  glyphicon-user' style='color:"+color+";'></span> "+user+"</li>")
+
+                }
+            }
+        })
+
 
         oList.delegate(".text-primary","click",function(){
             oInput.val("@"+$(this).text()+" ");
@@ -63,6 +90,14 @@ var socket = io.connect("http://localhost:8080")
             var curMsg = oInput.val();
             socket.emit("message",curMsg);
             oInput.val("");
+        }
+
+        window.join = function(room){
+            socket.emit("join",room);
+        }
+
+        window.leave = function(room){
+            socket.emit("leave",room);
         }
     }
 </script>
