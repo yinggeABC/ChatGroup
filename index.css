@@ -1,6 +1,10 @@
 body{
     margin-top:50px;
 }
+.container{
+    margin:50px auto;
+    width:800px;
+}
 
 .panel-heading{
     margin-top:0;
