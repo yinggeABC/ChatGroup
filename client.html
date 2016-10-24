@@ -32,6 +32,7 @@
 <script>
     window.onload = function(){
         var oList = $(".list-group")
+        var oInput = $("[type='text']")
 var socket = io.connect("http://localhost:8080")
 
     socket.on("connect",function(){
@@ -41,6 +42,10 @@ var socket = io.connect("http://localhost:8080")
       socket.on("message",function(msg){
           append(msg)
       })
+
+        oList.delegate(".text-primary","click",function(){
+            oInput.val("@"+$(this).text()+" ");
+        })
 
 
         function append(msg){
@@ -54,7 +59,7 @@ var socket = io.connect("http://localhost:8080")
         }
 
         window.send = function(){
-            var oInput = $("[type='text']")
+
             var curMsg = oInput.val();
             socket.emit("message",curMsg);
             oInput.val("");

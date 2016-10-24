@@ -5,3 +5,8 @@ body{
 .panel-heading{
     margin-top:0;
 }
+
+
+.list-group-item .text-primary{
+    cursor:pointer;
+}
